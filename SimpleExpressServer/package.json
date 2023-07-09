@@ -1,0 +1,14 @@
+{
+  "name": "simpleexpressserver",
+  "version": "1.0.0",
+  "description": "test apps with simple http server, using this as an endpoint",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
