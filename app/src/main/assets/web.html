@@ -1,0 +1,75 @@
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <canvas id="graph"></canvas>
+        <p id="moistureTips"></p>
+        <img id="image" src="/image.jpg" style="height: 500px; ">
+        <p>The plant is growing well</p>
+
+        <script>
+            setInterval(() => {
+                console.log("new fetch")
+                var datas = {}
+                fetch("/data", {
+                    method : "GET"
+                }).then(response => response.json())
+                .then(json => {
+                    console.log(json[json.length - 1])
+                    var latestMoisture = json[json.length - 1].moisture
+                    if (latestMoisture < 1) {
+                        document.getElementById("moistureTips").innerHTML = "you should water your plant!"                    
+                    }
+                    else {
+                        document.getElementById("moistureTips").innerHTML = "your plant is healthy!"                    
+                    }
+                    var moistureData = []
+                    var labels = []
+                    for (obj in json) {
+                        moistureData.push(parseFloat(json[obj].moisture))
+                        let date = new Date(parseFloat(json[obj].timeStamp))
+                        labels.push(`${date.getHours()}:${date.getMinutes()}`)
+                    }
+                    console.log(moistureData)
+                    datas = {
+                        labels : labels,
+                        datasets : [
+                            {
+                                label : "Moisture",
+                                data : moistureData,
+                            }
+                        ]
+                    }
+
+                    const graphConfig = {
+                    type: 'line',
+                    data: datas,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            title: {
+                                display: true,
+                                text: 'Soil Moisture'
+                            }
+                        }
+                    },
+                };            
+                
+                new Chart(document.getElementById("graph"), graphConfig);
+                })
+                document.getElementById("image").src = "/image.jpg?rand=" + Math.random()
+            }, 1 * 1000)                    
+        </script>        
+    </body>
+</html>
